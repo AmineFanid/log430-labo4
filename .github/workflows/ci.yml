@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -32,4 +32,14 @@ jobs:
 
       - name: Run tests
         working-directory: src
-        run: echo "Call pytest command here!"
+        run: |
+          echo "Démarrage des conteneurs (depuis la racine)..."
+          cd .. 
+          docker compose up -d
+          
+          echo "Attente de 15 secondes pour que MySQL soit prêt..."
+          sleep 15
+          
+          echo "Lancement des tests..."
+          cd src
+          pytest -v
