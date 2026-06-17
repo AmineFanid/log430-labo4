@@ -33,8 +33,15 @@ jobs:
       - name: Run tests
         working-directory: src
         run: |
-          echo "Démarrage des conteneurs (depuis la racine)..."
-          cd .. 
+          echo "Préparation de l'environnement..."
+          cd ..
+          
+          # Force la création du réseau. Le "|| true" empêche le script de planter si le réseau existe déjà.
+          docker network create labo04-network || true
+          
+          echo "Déploiement de l'infrastructure Docker..."
+          docker compose down
+          docker compose build
           docker compose up -d
           
           echo "Attente de 15 secondes pour que MySQL soit prêt..."
