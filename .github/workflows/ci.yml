@@ -47,3 +47,4 @@ jobs:
           cd src
           # On ajoute un timeout pour éviter que le pipeline ne bloque indéfiniment
           pytest -v --timeout=30
+          
