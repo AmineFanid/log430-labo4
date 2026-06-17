@@ -35,20 +35,15 @@ jobs:
       - name: Run tests
         working-directory: src
         run: |
-          echo "Préparation de l'environnement..."
+          echo "Démarrage des services..."
           cd ..
-          
-          # Force la création du réseau. Le "|| true" empêche le script de planter si le réseau existe déjà.
-          docker network create labo04-network || true
-          
-          echo "Déploiement de l'infrastructure Docker..."
-          docker compose down
-          docker compose build
           docker compose up -d
           
-          echo "Attente de 15 secondes pour que MySQL soit prêt..."
-          sleep 15
+          # On attend que MySQL ET que le cache soit initialisé
+          echo "Attente de 30 secondes pour la mise en place..."
+          sleep 30
           
           echo "Lancement des tests..."
           cd src
-          pytest -v
+          # On ajoute un timeout pour éviter que le pipeline ne bloque indéfiniment
+          pytest -v --timeout=30
